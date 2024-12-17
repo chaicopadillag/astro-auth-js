@@ -66,7 +66,7 @@ import AuthLayout from '@/layouts/AuthLayout.astro';
   </div>
 </AuthLayout>
 
-<!-- <script>
+<script>
   import { actions } from 'astro:actions';
   import Swal from 'sweetalert2';
 
@@ -85,7 +85,7 @@ import AuthLayout from '@/layouts/AuthLayout.astro';
       Swal.fire({
         icon: 'error',
         title: 'Credenciales no son correctas',
-        text: error.message,
+        text: error.message
       });
       btnSubmit.removeAttribute('disabled');
       return;
@@ -93,4 +93,4 @@ import AuthLayout from '@/layouts/AuthLayout.astro';
 
     window.location.replace('/protected');
   });
-</script> -->
+</script>

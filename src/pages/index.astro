@@ -1,19 +1,21 @@
 ---
 import MainLayout from '@/layouts/MainLayout.astro';
-import { getSession } from 'auth-astro/server';
-
-const session = await getSession(Astro.request);
-
-console.log({ session });
+import { actions } from 'astro:actions';
 ---
 
 <MainLayout>
   <h1 class='text-3xl'>Home Page</h1>
-  {
-    session && (
-      <pre>
-        <code>{JSON.stringify(session, null, 2)}</code>
-      </pre>
-    )
-  }
 </MainLayout>
+<script>
+  import { actions } from 'astro:actions';
+
+  const { data, error } = await actions.getProductPaginate({
+    page: 1,
+    perPage: 10
+  });
+  if (error) {
+    console.log('Error in fetching data', error);
+  }
+
+  console.log('Data', data);
+</script>
