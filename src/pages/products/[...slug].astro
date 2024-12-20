@@ -1,5 +1,5 @@
 ---
-import { ProductSlideshow } from '@/components/products/ProductSlideshow';
+import ProductSlideshow from '@/components/products/ProductSlideshow.astro';
 import MainLayout from '@/layouts/MainLayout.astro';
 import { actions } from 'astro:actions';
 const { slug = '' } = Astro.params;
@@ -12,9 +12,7 @@ if (error) {
 ---
 
 <MainLayout title={product.title}>
-  <h1>{product.title}</h1>
-
-  <div class='grid grid-cols-1 md:grid-cols-3 w-full'>
+  <div class='grid grid-cols-1 md:grid-cols-3 w-full gap-4'>
     <ProductSlideshow images={product.images} />
 
     <section>
@@ -28,20 +26,57 @@ if (error) {
 
       <h3 class='mt-5'>Cantidad</h3>
       <div>
-        <button class='btn-quantity'>-</button>
-        <input type='number' min='1' value='1' />
-        <button class='btn-quantity'>+</button>
+        <button class='btn-quantity' id='btnDecrement'>-</button>
+        <input type='number' min='1' id='inputQuantity' value='1' />
+        <button class='btn-quantity' id='btnIncrement'>+</button>
       </div>
 
-      <button class='mt-5 bg-blue-500 text-white p-3 w-full'>Añadir al carrito</button>
+      <button class='mt-5 bg-blue-500 text-white p-3 w-full' id='btnAddToCart'>Añadir al carrito</button>
 
       <h3 class='mt-10'>Descripción</h3>
       <p>{product.description}</p>
     </section>
   </div>
 
-  <input type='hidden' id='product-id' value={product.id} />
+  <input type='hidden' id='productId' value={product.id} />
 </MainLayout>
+<script>
+  const inputProductId = document.querySelector('#productId') as HTMLInputElement;
+  const inputQuantity = document.querySelector('#inputQuantity') as HTMLInputElement;
+  const buttonAddToCart = document.querySelector('#btnAddToCart') as HTMLButtonElement;
+  const buttonIncrement = document.querySelector('#btnIncrement') as HTMLButtonElement;
+  const buttonDecrement = document.querySelector('#btnDecrement') as HTMLButtonElement;
+
+  const sizes = document.querySelectorAll('li') as NodeListOf<HTMLLIElement>;
+
+  sizes.forEach((size) => {
+    size.addEventListener('click', (event) => {
+      document.querySelectorAll('li').forEach((size) => size.classList.remove('selected-size'));
+      event.target.classList.add('selected-size');
+    });
+  });
+
+  buttonIncrement.addEventListener('click', () => {
+    inputQuantity.value = Math.min(5, parseInt(inputQuantity.value) + 1).toString();
+  });
+
+  buttonDecrement.addEventListener('click', () => {
+    inputQuantity.value = Math.max(1, parseInt(inputQuantity.value) - 1).toString();
+  });
+
+  buttonAddToCart.addEventListener('click', () => {
+    const productId = inputProductId.value;
+    const size = document.querySelector('.selected-size')?.textContent;
+    const quantity = inputQuantity.value;
+
+    if (!size) {
+      alert('Selecciona una talla');
+      return;
+    }
+
+    console.log({ productId, size, quantity });
+  });
+</script>
 
 <style>
   h3 {
