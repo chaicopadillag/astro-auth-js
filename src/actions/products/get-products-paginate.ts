@@ -1,3 +1,4 @@
+import type { ProductType } from '@/interfaces/products';
 import { defineAction } from 'astro:actions';
 import { count, db, Product, sql } from 'astro:db';
 import { z } from 'astro:schema';
@@ -25,7 +26,7 @@ export const getProductPaginate = defineAction({
 
     if (page_ > totalPages) {
       return {
-        products: [],
+        products: [] as ProductType[],
         page: page_,
         perPage: perPage_,
         totalPages,
@@ -45,10 +46,8 @@ export const getProductPaginate = defineAction({
 
     const { rows } = await db.run(query);
 
-    console.log({ rows });
-
     return {
-      products: rows,
+      products: rows as any as ProductType[],
       page: page_,
       perPage: perPage_,
       totalPages,

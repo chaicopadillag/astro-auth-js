@@ -1,0 +1,61 @@
+---
+type Props = {
+  totalPages: number;
+};
+
+const url = Astro.url;
+
+const currentPage = Number(url.searchParams.get('page') ?? 1);
+
+const path = url.pathname;
+
+const prevPage = Math.max(currentPage > 1 ? currentPage - 1 : 1, 1);
+const { totalPages = 1 } = Astro.props;
+
+const nextPage = Math.min(currentPage < totalPages ? currentPage + 1 : totalPages, totalPages);
+---
+
+<nav class='flex items-center justify-between px-4 sm:px-0 mb-20' role='navigation' aria-label='Pagination Navigation'>
+  {
+    currentPage === 1 ? (
+      <span
+        class='flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md opacity-50 cursor-not-allowed'
+        aria-label='Previous page'
+      >
+        <span>Previous</span>
+      </span>
+    ) : (
+      <a
+        href={`${path}?page=${prevPage}`}
+        class='flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+        aria-label='Previous page'
+      >
+        <span>Previous</span>
+      </a>
+    )
+  }
+
+  <div class='hidden sm:flex items-center'>
+    <span class='text-sm text-gray-700'>
+      Page <span class='font-medium'>{currentPage}</span> of <span class='font-medium'>{totalPages}</span>
+    </span>
+  </div>
+  {
+    currentPage === totalPages ? (
+      <span
+        class='flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md opacity-50 cursor-not-allowed'
+        aria-label='Next page'
+      >
+        <span>Next</span>
+      </span>
+    ) : (
+      <a
+        href={`${path}?page=${nextPage}`}
+        class='flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
+        aria-label='Next page'
+      >
+        <span>Next</span>
+      </a>
+    )
+  }
+</nav>

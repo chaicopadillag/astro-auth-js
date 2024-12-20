@@ -1,21 +1,31 @@
 ---
-import MainLayout from '@/layouts/MainLayout.astro';
 import { actions } from 'astro:actions';
+
+import { ProductList } from '@/components/products/ProductList';
+import Pagination from '@/components/shared/Pagination.astro';
+import MainLayout from '@/layouts/MainLayout.astro';
+
+const url = Astro.url;
+const path = url.pathname;
+const page = Number(url.searchParams.get('page') ?? 1);
+
+if (page <= 0) {
+  return Astro.redirect(`${path}?page=1`);
+}
+
+const { data, error } = await Astro.callAction(actions.getProductPaginate, {
+  page,
+  perPage: 12
+});
+
+if (error) {
+  console.log('Error in fetching data', error);
+  throw new Error('Error in fetching data');
+}
 ---
 
 <MainLayout>
-  <h1 class='text-3xl'>Home Page</h1>
+  <ProductList products={data.products} client:idle />
+  <Pagination totalPages={data.totalPages} />
 </MainLayout>
-<script>
-  import { actions } from 'astro:actions';
-
-  const { data, error } = await actions.getProductPaginate({
-    page: 1,
-    perPage: 10
-  });
-  if (error) {
-    console.log('Error in fetching data', error);
-  }
-
-  console.log('Data', data);
-</script>
+<script></script>
