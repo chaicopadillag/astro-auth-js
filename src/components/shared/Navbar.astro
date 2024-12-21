@@ -11,7 +11,7 @@ const { isLoggedIn, isAdmin } = Astro.locals;
   </h1>
   <div class='flex items-center'>
     <ul class='flex items-center space-x-6'>
-      <CounterCart client:idle />
+      <CounterCart client:load transition:persist />
       <li class='font-semibold text-gray-700'>
         <a href='/'>Home</a>
       </li>
@@ -39,12 +39,13 @@ const { isLoggedIn, isAdmin } = Astro.locals;
 </nav>
 
 <script>
-  const { signOut } = await import('auth-astro/client');
+  import { signOut } from 'auth-astro/client';
+  document.addEventListener('astro:page-load', () => {
+    const logoutElem = document.querySelector('#logout') as HTMLLIElement;
 
-  const logoutElem = document.querySelector('#logout') as HTMLLIElement;
-
-  logoutElem?.addEventListener('click', async () => {
-    await signOut();
-    window.location.href = '/';
+    logoutElem?.addEventListener('click', async () => {
+      await signOut();
+      window.location.href = '/';
+    });
   });
 </script>

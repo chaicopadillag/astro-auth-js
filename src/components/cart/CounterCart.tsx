@@ -12,9 +12,11 @@ export const CounterCart = () => {
 
   return (
     <a href='/cart' className='relative inline-block'>
-      <span className='absolute -top-2 -right-2 flex justify-center items-center bg-blue-600 text-white text-xs rounded-full w-5 h-5'>
-        {itemsInCart}
-      </span>
+      {itemsInCart > 0 && (
+        <span className='absolute -top-2 -right-2 flex justify-center items-center bg-blue-600 text-white text-xs rounded-full w-5 h-5'>
+          {itemsInCart}
+        </span>
+      )}
 
       <svg xmlns='http://www.w3.org/2000/svg' width={32} height={32} viewBox='0 0 32 32'>
         <g fill='none' stroke='currentColor' strokeLinecap='round' strokeLinejoin='round' strokeWidth={2}>

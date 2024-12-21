@@ -1,5 +1,6 @@
 ---
 import Navbar from '@/components/shared/Navbar.astro';
+import { ViewTransitions } from 'astro:transitions';
 
 interface Props {
   title?: string;
@@ -15,6 +16,7 @@ const { title = 'Astro Store' } = Astro.props;
     <meta name='viewport' content='width=device-width' />
     <meta name='generator' content={Astro.generator} />
     <title>{title}</title>
+    <ViewTransitions />
   </head>
   <body class='bg-gray-100'>
     <Navbar />

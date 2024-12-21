@@ -22,14 +22,14 @@ export class CookieCart {
     return JSON.parse(Cookies.get('cart') ?? '[]');
   }
 
-  static async removeFromCart(product: ProductCart) {
+  static removeFromCart(product: ProductCart) {
     const productsInCart = this.getCart();
     const newProductsInCart = productsInCart.filter((p) => p.productId !== product.productId || p.size !== product.size);
     Cookies.set('cart', JSON.stringify(newProductsInCart));
     return newProductsInCart;
   }
 
-  static async clearCart() {
+  static clearCart() {
     Cookies.remove('cart');
   }
 }

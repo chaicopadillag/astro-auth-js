@@ -45,45 +45,50 @@ if (error) {
 <script>
   import { CookieCart } from '@/libs/cookie-cart';
   import { totalItemsInCart } from '@/store/cartStore';
-  const inputProductId = document.querySelector('#productId') as HTMLInputElement;
-  const inputQuantity = document.querySelector('#inputQuantity') as HTMLInputElement;
-  const buttonAddToCart = document.querySelector('#btnAddToCart') as HTMLButtonElement;
-  const buttonIncrement = document.querySelector('#btnIncrement') as HTMLButtonElement;
-  const buttonDecrement = document.querySelector('#btnDecrement') as HTMLButtonElement;
+  import { navigate } from 'astro:transitions/client';
 
-  const sizes = document.querySelectorAll('li') as NodeListOf<HTMLLIElement>;
+  document.addEventListener('astro:page-load', () => {
+    const inputProductId = document.querySelector('#productId') as HTMLInputElement;
+    const inputQuantity = document.querySelector('#inputQuantity') as HTMLInputElement;
+    const buttonAddToCart = document.querySelector('#btnAddToCart') as HTMLButtonElement;
+    const buttonIncrement = document.querySelector('#btnIncrement') as HTMLButtonElement;
+    const buttonDecrement = document.querySelector('#btnDecrement') as HTMLButtonElement;
 
-  sizes.forEach((size) => {
-    size.addEventListener('click', (event) => {
-      document.querySelectorAll('li').forEach((size) => size.classList.remove('selected-size'));
-      event.target.classList.add('selected-size');
+    const sizes = document.querySelectorAll('li') as NodeListOf<HTMLLIElement>;
+
+    sizes.forEach((size) => {
+      size.addEventListener('click', (event) => {
+        document.querySelectorAll('li').forEach((size) => size.classList.remove('selected-size'));
+        event.target.classList.add('selected-size');
+      });
     });
-  });
 
-  buttonIncrement.addEventListener('click', () => {
-    inputQuantity.value = Math.min(5, parseInt(inputQuantity.value) + 1).toString();
-  });
+    buttonIncrement?.addEventListener('click', () => {
+      inputQuantity.value = Math.min(5, parseInt(inputQuantity.value) + 1).toString();
+    });
 
-  buttonDecrement.addEventListener('click', () => {
-    inputQuantity.value = Math.max(1, parseInt(inputQuantity.value) - 1).toString();
-  });
+    buttonDecrement?.addEventListener('click', () => {
+      inputQuantity.value = Math.max(1, parseInt(inputQuantity.value) - 1).toString();
+    });
 
-  buttonAddToCart.addEventListener('click', () => {
-    const productId = inputProductId.value;
-    const size = document.querySelector('.selected-size')?.textContent;
-    const quantity = Number(inputQuantity.value);
+    buttonAddToCart?.addEventListener('click', () => {
+      const productId = inputProductId.value;
+      const size = document.querySelector('.selected-size')?.textContent;
+      const quantity = Number(inputQuantity.value);
 
-    if (!size) {
-      alert('Selecciona una talla');
-      return;
-    }
-    // buttonAddToCart.disabled = true;
+      if (!size) {
+        alert('Selecciona una talla');
+        return;
+      }
+      buttonAddToCart.disabled = true;
 
-    const items = CookieCart.addToCart({ productId, size, quantity });
+      const items = CookieCart.addToCart({ productId, size, quantity });
 
-    totalItemsInCart.set(items.length);
+      totalItemsInCart.set(items.length);
 
-    // window.location.href = '/cart';
+      // window.location.href = '/cart';
+      navigate('/cart');
+    });
   });
 </script>
 

@@ -72,21 +72,27 @@ const total = data.reduce((acc, product) => acc + product.price * product.quanti
 </MainLayout>
 <script>
   import { CookieCart } from '@/libs/cookie-cart';
+  import { totalItemsInCart } from '@/store/cartStore';
+  import { navigate } from 'astro:transitions/client';
 
-  const deleteProduct = document.querySelectorAll('#deleteProduct') as NodeListOf<HTMLButtonElement>;
+  document.addEventListener('astro:page-load', () => {
+    const deleteProduct = document.querySelectorAll('#deleteProduct') as NodeListOf<HTMLButtonElement>;
 
-  deleteProduct.forEach((button) => {
-    button.addEventListener('click', async () => {
-      const productId = button.dataset.product || '';
-      const size = button.dataset.size || '';
+    deleteProduct.forEach((button) => {
+      button.addEventListener('click', async () => {
+        const productId = button.dataset.product || '';
+        const size = button.dataset.size || '';
 
-      await CookieCart.removeFromCart({
-        productId,
-        size,
-        quantity: 0
+        const items = CookieCart.removeFromCart({
+          productId,
+          size,
+          quantity: 0
+        });
+
+        totalItemsInCart.set(items.length);
+
+        navigate('/cart');
       });
-
-      location.reload();
     });
   });
 </script>
