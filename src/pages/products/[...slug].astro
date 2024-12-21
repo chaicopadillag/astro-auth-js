@@ -31,7 +31,9 @@ if (error) {
         <button class='btn-quantity' id='btnIncrement'>+</button>
       </div>
 
-      <button class='mt-5 bg-blue-500 text-white p-3 w-full' id='btnAddToCart'>Añadir al carrito</button>
+      <button class='mt-5 bg-blue-500 text-white p-3 w-full disabled:bg-slate-400 disabled:cursor-not-allowed' id='btnAddToCart'
+        >Añadir al carrito</button
+      >
 
       <h3 class='mt-10'>Descripción</h3>
       <p>{product.description}</p>
@@ -41,6 +43,8 @@ if (error) {
   <input type='hidden' id='productId' value={product.id} />
 </MainLayout>
 <script>
+  import { CookieCart } from '@/libs/cookie-cart';
+  import { totalItemsInCart } from '@/store/cartStore';
   const inputProductId = document.querySelector('#productId') as HTMLInputElement;
   const inputQuantity = document.querySelector('#inputQuantity') as HTMLInputElement;
   const buttonAddToCart = document.querySelector('#btnAddToCart') as HTMLButtonElement;
@@ -67,14 +71,19 @@ if (error) {
   buttonAddToCart.addEventListener('click', () => {
     const productId = inputProductId.value;
     const size = document.querySelector('.selected-size')?.textContent;
-    const quantity = inputQuantity.value;
+    const quantity = Number(inputQuantity.value);
 
     if (!size) {
       alert('Selecciona una talla');
       return;
     }
+    // buttonAddToCart.disabled = true;
 
-    console.log({ productId, size, quantity });
+    const items = CookieCart.addToCart({ productId, size, quantity });
+
+    totalItemsInCart.set(items.length);
+
+    // window.location.href = '/cart';
   });
 </script>
 

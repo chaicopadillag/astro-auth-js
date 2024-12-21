@@ -1,5 +1,6 @@
 import { loginUser, logout, registerUser } from './auth';
 import { getProductBySlug } from './products/get-product-slug';
+import { getProductsInCart } from './products/get-products-in-cart';
 import { getProductPaginate } from './products/get-products-paginate';
 
 export const server = {
@@ -7,5 +8,6 @@ export const server = {
   logout,
   registerUser,
   getProductPaginate,
-  getProductBySlug
+  getProductBySlug,
+  getProductsInCart
 };

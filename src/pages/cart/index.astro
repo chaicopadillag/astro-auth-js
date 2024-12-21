@@ -1,0 +1,92 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { CurrencyFormatter } from '@/libs/currency-formatter';
+import { actions } from 'astro:actions';
+
+// const cookieCart = JSON.parse(Astro.cookies.get('cart')?.value ?? '[]');
+
+// console.log({ cookieCart });
+
+const { data, error } = await Astro.callAction(actions.getProductsInCart, {});
+
+if (error) {
+  return Astro.redirect('/');
+}
+
+const total = data.reduce((acc, product) => acc + product.price * product.quantity, 0);
+---
+
+<MainLayout title={'Shop Cart'}>
+  <section class='grid grid-cols-1 sm:grid-cols-2 gap-6'>
+    <div class='order-2 sm:order-1'>
+      <h1 class='text-2xl font-semibold mb-4'>Productos</h1>
+      <a href='javascript:history.back()' class='text-blue-700 hover:underline'>Seguir comprando</a>
+      {
+        data.map((product) => (
+          <div class='flex items-center justify-between border-b border-gray-200 py-4'>
+            <div class='flex items-center'>
+              <img src={product.image} alt={product.title} class='w-16 h-16 object-cover rounded-lg' />
+              <div class='ml-4'>
+                <a href={`/products/${product.slug}`} class='hover:underline hover:text-blue-700'>
+                  <h2 class='text-lg font-semibold'>{product.title}</h2>
+                </a>
+                <p class='text-gray-600'>Talla: {product.size}</p>
+                <button class='text-red-500 hover:text-red-700' id='deleteProduct' data-product={product.id} data-size={product.size}>
+                  Eliminar
+                </button>
+              </div>
+            </div>
+            <div class='flex items-center'>
+              <span class='text-gray-600'>{product.quantity} x</span>
+              <span class='text-xl font-semibold ml-2'>{product.price}</span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+    <div class='bg-black h-[330px] text-white p-6 rounded-lg shadow-lg order-1'>
+      <h2 class='text-lg font-semibold mb-4'>Resumen de compra</h2>
+
+      <div class='flex justify-between text-gray-400 mb-2'>
+        <span>Envío</span>
+        <span>Gratis</span>
+      </div>
+
+      <div class='flex justify-between text-gray-400 mb-4'>
+        <span>SubTotal </span>
+        <span>{CurrencyFormatter.format(total)}</span>
+      </div>
+      <div class='flex justify-between text-gray-400 mb-4'>
+        <span>Impuesto </span>
+        <span>{CurrencyFormatter.format(total * 0.18)}</span>
+      </div>
+
+      <div class='flex justify-between text-xl font-bold'>
+        <span>Total</span>
+        <span>{CurrencyFormatter.format(total * 1.18)}</span>
+      </div>
+
+      <button class='mt-10 w-full bg-blue-700 text-gray-300 py-3 rounded-lg hover:bg-gray-600 transition-all'> PAGAR </button>
+    </div>
+  </section>
+</MainLayout>
+<script>
+  import { CookieCart } from '@/libs/cookie-cart';
+
+  const deleteProduct = document.querySelectorAll('#deleteProduct') as NodeListOf<HTMLButtonElement>;
+
+  deleteProduct.forEach((button) => {
+    button.addEventListener('click', async () => {
+      const productId = button.dataset.product || '';
+      const size = button.dataset.size || '';
+
+      await CookieCart.removeFromCart({
+        productId,
+        size,
+        quantity: 0
+      });
+
+      location.reload();
+    });
+  });
+</script>
