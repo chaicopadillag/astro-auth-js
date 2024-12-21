@@ -26,6 +26,7 @@ if (error) {
 
 <MainLayout>
   <ProductList products={data.products} client:idle />
-  <Pagination totalPages={data.totalPages} />
+  <div class='px-5 py-5 bg-white rounded-lg mb-6'>
+    <Pagination totalPages={data.totalPages} />
+  </div>
 </MainLayout>
-<script></script>

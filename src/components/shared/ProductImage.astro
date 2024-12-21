@@ -1,0 +1,12 @@
+---
+type Props = {
+  src: string;
+  alt: string;
+};
+
+const { src, alt } = Astro.props;
+
+const image = src.includes('http') ? src : `${import.meta.env.PUBLIC_APP_URL}/images/products/${src}`;
+---
+
+<img class='w-full h-full rounded' src={image} alt={alt} />

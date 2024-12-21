@@ -15,7 +15,7 @@ const { totalPages = 1 } = Astro.props;
 const nextPage = Math.min(currentPage < totalPages ? currentPage + 1 : totalPages, totalPages);
 ---
 
-<nav class='flex items-center justify-between px-4 sm:px-0 mb-20' role='navigation' aria-label='Pagination Navigation'>
+<nav class='flex items-center justify-between px-4 sm:px-0' role='navigation' aria-label='Pagination Navigation'>
   {
     currentPage === 1 ? (
       <span
