@@ -47,7 +47,10 @@ export const getProductPaginate = defineAction({
     const { rows } = await db.run(query);
 
     return {
-      products: rows as any as ProductType[],
+      products: (rows as any as ProductType[]).map((product) => ({
+        ...product,
+        images: product?.images ? product.images : 'no-image.png'
+      })),
       page: page_,
       perPage: perPage_,
       totalPages,

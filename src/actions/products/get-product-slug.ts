@@ -8,6 +8,21 @@ export const getProductBySlug = defineAction({
     slug: z.string()
   }),
   handler: async ({ slug }) => {
+    if ('new' === slug) {
+      return {
+        id: '',
+        description: '',
+        gender: '',
+        price: 0,
+        sizes: '',
+        slug: '',
+        title: '',
+        stock: 1,
+        tags: '',
+        type: '',
+        images: []
+      };
+    }
     const product = await db.select().from(Product).where(eq(Product.slug, slug)).get();
 
     if (!product) {

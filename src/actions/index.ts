@@ -1,4 +1,5 @@
 import { loginUser, logout, registerUser } from './auth';
+import { createUpdateProduct } from './products/create-update-product';
 import { getProductBySlug } from './products/get-product-slug';
 import { getProductsInCart } from './products/get-products-in-cart';
 import { getProductPaginate } from './products/get-products-paginate';
@@ -9,5 +10,6 @@ export const server = {
   registerUser,
   getProductPaginate,
   getProductBySlug,
-  getProductsInCart
+  getProductsInCart,
+  createUpdateProduct
 };

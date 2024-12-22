@@ -18,6 +18,7 @@ if (error) {
   <a href='javascript:history.back()' class='text-blue-500'>← Volver</a>
 
   <form class='grid grid-cols-1 sm:grid-cols-2 gap-4'>
+    <input type='hidden' name='id' value={product.id} />
     <!-- Datos generales -->
     <div class='mt-2'>
       <h2 class='text-lg font-semibold'>Datos generales</h2>
@@ -189,6 +190,9 @@ if (error) {
   </style>
 </MainLayout>
 <script>
+  import { actions } from 'astro:actions';
+  import { navigate } from 'astro:transitions/client';
+
   document.addEventListener('astro:page-load', () => {
     const form = document.querySelector('form') as HTMLFormElement;
     const btnSizes = document.querySelectorAll('.btn-size');
@@ -202,7 +206,13 @@ if (error) {
 
       const formData = new FormData(form);
       formData.set('sizes', sizes);
-      console.log(Object.fromEntries(formData.entries()));
+      const { data, error } = await actions.createUpdateProduct(formData);
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+      navigate(`/dashboard/products/${data.slug}`);
     });
   });
 </script>
