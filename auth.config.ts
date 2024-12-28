@@ -29,8 +29,6 @@ export default defineConfig({
 
         const { password: _, ...rest } = user;
 
-        console.log({ rest });
-
         return rest;
       }
     })
@@ -40,13 +38,13 @@ export default defineConfig({
     // })
   ],
   callbacks: {
-    jwt: ({ token, user }) => {
+    jwt: ({ token, user }: any) => {
       if (user) {
         token.user = user;
       }
       return token;
     },
-    session: ({ session, token }) => {
+    session: ({ session, token }: any) => {
       session.user = token.user as AdapterUser;
 
       return session;

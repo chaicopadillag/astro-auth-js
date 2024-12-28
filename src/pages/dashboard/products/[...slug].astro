@@ -150,7 +150,7 @@ if (error) {
         </div>
 
         <!-- Slideshow -->
-        <ProductSlideshow images={product.images} />
+        <ProductSlideshow images={product.images.map((img) => img.image)} />
 
         <table class='w-full border'>
           <thead>
@@ -161,13 +161,15 @@ if (error) {
           </thead>
           <tbody>
             {
-              product.images.map((image) => (
-                <tr class='border'>
+              product.images.map((img) => (
+                <tr class='border' id={img.id}>
                   <td class='flex justify-center w-40'>
-                    <ProductImage src={image} alt={product.title} />
+                    <ProductImage src={img.image} alt={product.title} />
                   </td>
                   <td class='text-center'>
-                    <button class='btn-delete-image'>X</button>
+                    <button type='button' data-id={img.id} class='btn-delete-image'>
+                      X
+                    </button>
                   </td>
                 </tr>
               ))
@@ -213,6 +215,30 @@ if (error) {
         return;
       }
       navigate(`/dashboard/products/${data.slug}`);
+    });
+
+    const btnsDeleteImages = document.querySelectorAll('.btn-delete-image');
+
+    btnsDeleteImages?.forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        const id = btn.getAttribute('data-id');
+
+        if (!id) {
+          return;
+        }
+        console.log({ id });
+
+        const { data, error } = await actions.deleteImageProduct({ imageId: id });
+
+        if (error) {
+          console.error(error);
+          return;
+        }
+        console.log({ data });
+
+        const tr = btn.closest('tr');
+        tr?.remove();
+      });
     });
   });
 </script>
